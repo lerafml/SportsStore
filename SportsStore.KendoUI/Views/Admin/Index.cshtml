@@ -1,0 +1,227 @@
+﻿@{
+    ViewBag.Title = "Admin: Все продуктыи категории";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 style="display: inline-block;">Продукты</h1>
+<a class="k-button" href="@Url.Action("List", "Product")" style="float: right; margin: 10px 40px 0 0;">На главную страницу</a>
+
+@(Html.Kendo().Notification()
+            .Name("notification")
+            .Position(p => p.Pinned(true).Top(30).Right(500))
+            //.AutoHideAfter(1000)
+            .Templates(t =>
+            {
+                t.Add().Type("error").ClientTemplateID("errorTemplate");
+                t.Add().Type("success").ClientTemplateID("successTemplate");
+            })
+)
+
+@(Html.Kendo().Grid<SportsStore.KendoUI.Models.ProductViewModel>()
+                                                    .Name("products")
+                                                    .ToolBar(toolbar =>
+                                                    {
+                                                        toolbar.Template(@<text>
+                                                            <a href="\\#" class="k-pager-refresh k-link k-button k-button-icon" title="Refresh"><span class="k-icon k-i-reload"></span></a>
+                                                            <a class="k-button k-button-icontext k-grid-Экспорт в XML" href="/Admin/ExportXML">Экспорт в XML</a>
+                                                            <button class="k-button k-button-icontext k-grid-excel" type="button"><span class="k-icon k-i-excel"></span>Экспорт в Excel</button>
+                                                            <a class="k-button k-button-icontext k-grid-add" href="/Admin/ReadProducts?products-mode=insert"><span class="k-icon k-i-add"></span>Добавить</a>
+                                                            <div style="padding: 0; width: 350px;">
+                                                                @(Html.Kendo().Upload()
+                                                                            .Name("files")
+                                                                            .Multiple(false)
+                                                                            .HtmlAttributes(new { aria_label = "files" })
+                                                                )
+                                                                <p>Выберите XML файл для загрузки.</p>
+                                                            </div>
+                                                            <p style="margin-left: 20px;">
+                                                                @(Html.Kendo().Button()
+                                                                        .Name("import")
+                                                                        .Content("Загрузить в таблицу")
+                                                                        .Enable(true)
+                                                                        .Events(e =>
+                                                                            e.Click("onImportClick")
+                                                                        )
+                                                                )
+                                                            </p>
+                                                        </text>);
+                                                    })
+                                                                .Columns(columns =>
+                                                                {
+                                                                    columns.Bound(c => c.Name).Title("Название продукта");
+                                                                    columns.Bound(c => c.ProductID).Title("Изображение").ClientTemplate(@"<img id='img#:ProductID#' width='75' height='75' src='" + @Url.Action("GetImage", "Admin", new { productId = "#:ProductID#" }) + "'/>");
+                                                                   // columns.Bound(c => c.FileName).ClientTemplate(@"<div @class='item'><div style = float:'left'; margin-right: '20px' ><img id = 'Img_#= ProductID #' width = '75' height = '75' src =" + @Url.Content("~/App_Data/Images/#= FileName # ") + " /></div >").Title("Изображение");
+                                                                    columns.Bound(c => c.Description).Title("Описание");
+                                                                    columns.ForeignKey(c => c.CatID, (System.Collections.IEnumerable)ViewData["categories"], "CatID", "CatName").Title("Категория").Width(200);
+                                                                    columns.Bound(c => c.Price).Title("Цена").Format("{0:c}");
+                                                                    columns.Command(command => { command.Edit(); command.Destroy(); }).Width(270);
+                                                                })
+                                                                .Editable(editable => editable.Mode(GridEditMode.PopUp).TemplateName("PopupEditor"))
+                                                                .Filterable()
+                                                                .Pageable()
+                                                                .Sortable()
+                                                                .Scrollable()
+                                                                .HtmlAttributes(new { style = "height:550px;" })
+                                                                .DataSource(dataSourcee => dataSourcee
+                                                                    .Ajax()
+                                                                    .PageSize(20)
+                                                                    .ServerOperation(false)
+                                                                    .Events(events => events.Error("error_handler"))
+                                                                    .Model(model =>
+                                                                    {
+                                                                        model.Id(p => p.ProductID);
+                                                                        model.Field(p => p.ProductID).Editable(true);
+                                                                        model.Field(p => p.CatID).DefaultValue(1);
+                                                                    })
+                                                                    .Create(update => update.Action("CreateProduct", "Admin"))
+                                                                    .Read(read => read.Action("ReadProducts", "Admin"))
+                                                                    .Update(update => update.Action("EditProduct", "Admin"))
+                                                                    .Destroy(update => update.Action("DeleteProduct", "Admin"))
+                                                                )
+                                                                .Excel(excel => excel
+                                                                    .FileName("Продукты.xlsx")
+                                                                    .AllPages(true)
+                                                                    .ProxyURL(Url.Action("Export", "Admin"))
+                                                                )
+)
+
+<h1 style="width: 90%; display: inline-block;">Категории</h1>
+
+@(Html.Kendo().Grid<SportsStore.Domain.Entities.Category>()
+                                                        .Name("categories")
+                                                        .ToolBar(toolbar =>
+                                                        {
+                                                            toolbar.Excel();
+                                                            toolbar.Create();
+                                                        })
+                                                        .Columns(columns =>
+                                                        {
+                                                            columns.Bound(c => c.CatName).Title("Имя категории");
+                                                            columns.Command(command => { command.Edit(); command.Destroy(); }).Width(270);
+                                                        })
+                                                        .Editable(editable => editable.Mode(GridEditMode.PopUp))
+                                                        .Pageable()
+                                                        .Sortable()
+                                                        .Scrollable()
+                                                        .HtmlAttributes(new { style = "height:300px;" })
+                                                        .DataSource(dataSource => dataSource
+                                                            .Ajax()
+                                                            .PageSize(20)
+                                                            .Events(events => events.Error("error_handler"))
+                                                            .Model(model => model.Id(p => p.CatID))
+                                                            .Create(update => update.Action("CreateCategory", "Admin"))
+                                                            .Read(read => read.Action("ReadCategories", "Admin"))
+                                                            .Update(update => update.Action("EditCategory", "Admin"))
+                                                            .Destroy(update => update.Action("DeleteCategory", "Admin"))
+                                                        )
+                                                        .Excel(excel => excel
+                                                            .FileName("Категории.xlsx")
+                                                            .AllPages(true)
+                                                            .ProxyURL(Url.Action("Export", "Admin"))
+                                                        )
+)
+
+<script id="errorTemplate" type="text/x-kendo-template">
+    <div class="up upload-error">
+        <h3>#= title #</h3>
+        <p>#= message #</p>
+    </div>
+</script>
+
+<script id="successTemplate" type="text/x-kendo-template">
+    <div class="up upload-success">
+        <h3>#= title #</h3>
+        <p>#= message #</p>
+    </div>
+</script>
+
+<script type="text/javascript">
+
+
+
+
+    $(document).ready(function () {
+    });
+
+    function onSuccess(e) {
+        var type = $("#ImageMimeType");
+        var file = e.files[0].rawFile;
+        var fileName = $("#FileName");
+        document.getElementById("icon").src = URL.createObjectURL(e.files[0].rawFile);
+        fileName.val(e.files[0].name);
+        type.val(file.type);
+        console.log(file.type);
+        fileName.trigger("change");
+        type.trigger("change");
+        document.getElementById("img" + $("#ProductID").val()).src = URL.createObjectURL(e.files[0].rawFile);
+    }
+
+    function onImportClick(e) {
+        var notification = $("#notification").data("kendoNotification");
+        var upload = $("#files").data("kendoUpload"),
+            files = upload.getFiles();
+        var formData = new FormData();
+        console.log(files[0]);
+        formData.append("files[0]", files[0].rawFile, files[0].name);
+
+        $.ajax({
+            url: "@Url.Action("ImportFromXML", "Admin")",
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            //contentType: 'application/my-binary-type', // set accordingly
+            processData: false,
+                    success: function (data) {
+                        if (data.status == "success") {
+                            notification.show({
+                                title: "Успешно!",
+                                message: data.message,
+                            }, "success");
+                        } else {
+                            notification.show({
+                                title: "Ошибка!",
+                                message: data.message
+                            }, "error");
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        kendo.alert(thrownError + "-" + xhr.status);
+                    }
+
+                });
+    }
+
+    //function onUpload() {
+    //    console.log("completed");
+    //    $("#upload").removeAttr("disabled");
+    //}
+
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+</script>
+<style>
+    .up {
+        width: auto;
+        height: auto;
+    }
+
+    .up h3 {
+        padding: 30px 10px 5px;
+        font-size: 40px;
+    }
+
+    .up p {
+        font-size: 20px;
+    }
+</style>

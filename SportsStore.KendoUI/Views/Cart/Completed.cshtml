@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "SportsStore: Заказ оформлен";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="header">
+    <div class="title">SPORTS STORE</div>
+</div>
+<div style="width: 100%; padding-top: 20px; text-align: center;">
+    <h2>Спасибо!</h2>
+    Спасибо за заказ. Мы отправим ваши предметы как можно скорее.
+    <a role="button" id="checkout" href="@Url.Action("List", "Product")" class="k-button k-button-icontext" style="display: block; margin: 20px 45%">Обратно к списку</a>
+</div>

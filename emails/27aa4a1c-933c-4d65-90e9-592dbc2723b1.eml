@@ -1,0 +1,14 @@
+X-Sender: sportsstore@example.com
+X-Receiver: orders@example.com
+MIME-Version: 1.0
+From: sportsstore@example.com
+To: orders@example.com
+Date: 21 Dec 2020 12:13:23 +0300
+Subject: New order submitted!
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+
+A new order has been submitted=0D=0A---=0D=0AItems:=0D=0A1 x Kaya=
+k (subtotal: $275.00Total order value: $275.00---=0D=0AShip to:=0D=0A=
+lera=0D=0ALine1=0D=0ALine2=0D=0ALine3=0D=0ACity=0D=0AState=0D=0AR=
+ussia=0D=0AZIP=0D=0A---=0D=0AGift wrap: No

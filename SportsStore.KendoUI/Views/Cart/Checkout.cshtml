@@ -1,0 +1,83 @@
+﻿@using SportsStore.Domain.Entities
+@using Kendo.Mvc.UI.Fluent
+@using Kendo.Mvc.Extensions
+@{
+    ViewBag.Title = "Sports Store: Информация о доставке";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="header">
+    <div class="title">SPORTS STORE</div>
+</div>
+<div class="k-content">
+    <div id="validation-summary">
+    </div>
+
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary()
+        <h3>Отправить по адресу:</h3>
+        <label for="Name">Ваше полное имя</label>
+        @(Html.Kendo().TextBox()
+                .Name("Name")
+                .HtmlAttributes(new { placeholder = "ФИО", required = "required", validationmessage = "Введите ваше полное имя" })
+        )
+        <label for="Country" class="k-form-label">Страна</label>
+        <span class="k-form-field-wrap">
+        @(Html.Kendo().DropDownList()
+                    .Name("Country")
+                    .OptionLabel("Выберите страну")
+                    .DataSource(ds => ds.Read(read => read.Action("GetCountry", "Cart")))
+                    .HtmlAttributes(new { required = "required", data_required_msg = "Выберите вашу страну" })
+        )
+        <span class="k-invalid-msg" data-for="Country"></span>
+        </span>
+        <label for="Country">Город</label>
+        @(Html.Kendo().TextBox()
+                    .Name("City")
+                    .HtmlAttributes(new { placeholder = "Город", required = "required", validationmessage = "Введите название города" })
+        )
+        <label for="Country">Регион</label>
+        @(Html.Kendo().TextBox()
+                    .Name("State")
+                    .HtmlAttributes(new { placeholder = "Регион", required = "required", validationmessage = "Введите название региона" })
+        )
+        <label for="Country">Строка 1</label>
+        @(Html.Kendo().TextBox()
+                    .Name("Line1")
+                    .HtmlAttributes(new { placeholder = "Улица, здание, квартира...", required = "required", validationmessage = "Укажите улицу, здание, квартиру..." })
+        )
+        <label for="Country">Строка 2</label>
+        @(Html.Kendo().TextBox()
+                    .Name("Line2")
+        )
+
+        <label for="Country">Строка 3</label>
+        @(Html.Kendo().TextBox()
+                    .Name("Line3")
+        )
+        <label for="Country">ZIP код</label>
+        @(Html.Kendo().TextBox()
+                    .Name("ZIP")
+        )
+        @(Html.Kendo().CheckBox()
+                    .Name("GiftWrap")
+                    .Checked(true)
+                    .Label("Обернуть в подарочную обертку?")
+        )
+        <input class="k-button" type="submit" value="Завершить заказ" />
+    }
+    </div>
+<style>
+    .k-content {
+        padding: 40px 100px;
+    }
+    .k-textbox, .k-button, .k-dropdown {
+        display: block;
+        width: 250px;
+        margin-bottom: 10px;
+    }
+    .k-checkbox-label::before {
+        position: inherit;
+        margin-right: 10px;
+    }
+</style>

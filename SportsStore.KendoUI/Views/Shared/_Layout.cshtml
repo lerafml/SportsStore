@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="@Url.Content("~/Content/kendo/2019.3.1023/kendo.common.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2019.3.1023/kendo.flat.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="~/Content/Site.css" type="text/css" rel="stylesheet" />
+    <script src="@Url.Content("~/Scripts/jquery-3.3.1.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2019.3.1023/jszip.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2019.3.1023/kendo.all.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2019.3.1023/kendo.aspnetmvc.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/cultures/kendo.culture.ru-RU.min.js")"></script>
+    <script>
+        kendo.culture("ru-RU");
+    </script>
+</head>
+<body class="k-rtl">
+    <div id="content">
+        @RenderBody()
+    </div>
+    @Scripts.Render("~/Scripts/myscripts/myscript.js")
+</body>
+</html>

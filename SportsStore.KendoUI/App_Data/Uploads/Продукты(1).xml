@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-16"?>
+<ItemsList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Items>
+    <Item>
+      <Name>Kayak</Name>
+      <Category>Watersports</Category>
+      <Description>A boat for one person</Description>
+      <Price>280.00</Price>
+    </Item>
+    <Item>
+      <Name>Lifejacket</Name>
+      <Category>Watersports</Category>
+      <Description>Protective and fashionable</Description>
+      <Price>50.65</Price>
+    </Item>
+    <Item>
+      <Name>Soccer Ball</Name>
+      <Category>Soccer</Category>
+      <Description>FIFA-approved size and weight</Description>
+      <Price>19.50</Price>
+    </Item>
+    <Item>
+      <Name>Corner Flags</Name>
+      <Category>Soccer</Category>
+      <Description>Give your playing field a professional touch</Description>
+      <Price>34.95</Price>
+    </Item>
+    <Item>
+      <Name>Stadium</Name>
+      <Category>Soccer</Category>
+      <Description>Flat-packed 35,000-seat stadium</Description>
+      <Price>79500.00</Price>
+    </Item>
+    <Item>
+      <Name>Thinking Cap</Name>
+      <Category>Chess</Category>
+      <Description>Improve your brain efficiently by 75%</Description>
+      <Price>16.00</Price>
+    </Item>
+    <Item>
+      <Name>Unsteady Chair</Name>
+      <Category>Chess</Category>
+      <Description>Secretly give your opponent a disadvantage</Description>
+      <Price>29.95</Price>
+    </Item>
+    <Item>
+      <Name>Human Chess Board</Name>
+      <Category>Chess</Category>
+      <Description>Привет</Description>
+      <Price>75.00</Price>
+    </Item>
+    <Item>
+      <Name>Bling-Bling King</Name>
+      <Category>Chess</Category>
+      <Description>Gold-plated, diamond-studded King</Description>
+      <Price>1200.00</Price>
+    </Item>
+    <Item>
+      <Name>NEW ITEM</Name>
+      <Category>Soccer</Category>
+      <Description>A boat for one person</Description>
+      <Price>280.00</Price>
+    </Item>
+  </Items>
+</ItemsList>

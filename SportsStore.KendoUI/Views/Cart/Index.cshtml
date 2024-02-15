@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Title = "Sports Store: Your Cart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="header">
+    <div class="title">SPORTS STORE</div>
+</div>
+@(Html.Kendo().Grid<SportsStore.KendoUI.Models.CartItemsViewModel>()
+                        .Name("cart")
+                        .Columns(columns =>
+                        {
+                            columns.Bound(c => c.name).Title("Имя");
+                            columns.Bound(c => c.category).Title("Категория");
+                            columns.Bound(c => c.description).Title("Описание");
+                            columns.Bound(c => c.number).Title("Количество").Format("x{0}").Width(200);
+                            columns.Bound(c => c.price).Title("Цена").Format("{0:c}");
+                            columns.Bound(c => c.summary).Title("Сумма").Format("{0:c}")
+                                                .ClientFooterTemplate("Итог: #=sum# ₽");
+                            columns.Command(command => command.Destroy().Text("Убрать"));
+                        })
+                        .Editable(e => e.Mode(GridEditMode.InCell))
+                        .DataSource(dataSourcee => dataSourcee
+                            .Ajax()
+                            .Events(e =>
+                            {
+                                e.Error("error_handler");
+                            })
+                            .Aggregates(a => a.Add(p => p.summary).Sum())
+                            .Read(read => read.Action("ReadCart", "Cart"))
+                            .Update(update=>update.Action("UpdateCart", "Cart"))
+                            .Model(model => {
+                                model.Id(m => m.id);
+                                model.Field(m => m.name).Editable(false);
+                                model.Field(m => m.category).Editable(false);
+                                model.Field(m => m.description).Editable(false);
+                                model.Field(m => m.price).Editable(false);
+                                model.Field(m => m.summary).Editable(false);
+
+                            })
+                            .Destroy(destroy=>destroy.Action("RemoveFromCart", "Cart"))
+                            .AutoSync(true)
+                        )
+)
+<div style="width: 100%; padding-top: 20px; text-align: center;">
+    <a role="button" id="checkout" href="@Url.Action("Checkout", "Cart")" style="margin-right: 20px;" class="k-button k-button-icontext">Купить сейчас</a>
+    <a role="button" id="checkout" href="@Url.Action("List", "Product")" class="k-button k-button-icontext">Обратно к списку</a>
+</div>
+<script>
+    function onGridEdit(e)
+    {
+        e.sender.one("dataBound", function (e) {
+            e.sender.dataSource.read();
+        })
+    }
+    function bindDataAndRefresh(e) {
+        var grid = $("#cart").data("kendoGrid");
+        grid.bind("dataBound", onGridEdit(e));
+    }
+    $(document).ready(function () {
+        var grid = $("#cart").data("kendoGrid");
+        grid.bind("save", bindDataAndRefresh);
+        grid.bind("remove", bindDataAndRefresh);
+    });
+
+    function onChangeData(e)
+    {
+        if (e.action == "remove" || e.action == "itemchange") {
+            this.sync();
+            this.read();
+        }
+       
+    }
+
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+</script>
